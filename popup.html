@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <style>
+        .container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .timer {
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+        }
+        .time {
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+          text-align: center;
+        }
+        .colon {
+          width: 5px;
+          font-size: 20px;
+          padding: 3px;
+        }
+        .user-controls {
+          padding: 5px;
+        }
+        .btn {
+          width: 100%;
+        }
+      </style>
+    </head>
+    <body>
+        <div class="container">
+          <div class="timer">
+            <input type="number" id="hours" class="time" disabled />
+            <!-- </input> -->
+            <div class="colon">:</div>
+            <input type="number" id="minutes" class="time" disabled />
+            <!-- </input> -->
+            <div class="colon">:</div>
+            <input type="number" id="seconds" class="time" disabled />
+          </div>
+          <div class="user-controls">
+            <button class="btn" id="btn-start">START</button>
+            <button class="btn" id="btn-set-time">SET TIME</button>
+            <button class="btn" id="btn-stop">STOP</button>
+            <button class="btn" id="btn-reset">RESET</button>
+          </div>
+        </div>
+    </body>
+    <script src="popup.js"></script>
+</html>
