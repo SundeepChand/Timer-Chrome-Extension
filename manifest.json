@@ -2,7 +2,7 @@
     "name": "Timer",
     "version": "1.0",
     "description": "A timer to help you stay on time.",
-    "permissions": ["activeTab", "declarativeContent", "storage"],
+    "permissions": ["tts", "storage", "notifications"],
     "options_page": "options.html",
     "background": {
       "scripts": ["background.js"],

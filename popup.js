@@ -7,16 +7,23 @@ const btnSetTime = document.getElementById('btn-set-time');
 const btnStop = document.getElementById('btn-stop');
 const btnReset = document.getElementById('btn-reset');
 
-// const timeInterval = setInterval(() => {
-//     if (hours.value > 0) {
-//         hours.value -= 1;
-//     } else {
-//         clearInterval(timeInterval);
-//     }
-// }, 1000);
-chrome.runtime.sendMessage({ cmd: 'GET_TIME' }, ({ time }) => {
-    if (time) {
-        showTime(time);
+let handle = 0;
+chrome.runtime.sendMessage({ cmd: 'GET_TIME' }, (response) => {
+    if (response) {
+        if (response.time) {
+            showTime(response.time);
+            if (response.running) {
+                handle = setInterval(() => {
+                    decrement(response.time);
+                    showTime(response.time);
+                }, 1000);
+            }
+        }
+        if (response.running) {
+            disableButtons(true, true, false, true);
+        } else if (response.paused) {
+            disableButtons(false, true, true, false);
+        }
     }
 })
 
@@ -25,27 +32,67 @@ const toggleInputFieldDisabled = () => {
     minutes.disabled = !minutes.disabled;
     seconds.disabled = !seconds.disabled;
 }
-
-const showTime = (time) => {
-    hours.value = time.hours;
-    minutes.value = time.minutes;
-    seconds.value = time.seconds;
+const disableButtons = (start = false, setTime = false, Stop = false, reset = false) => {
+    btnReset.disabled = reset;
+    btnStart.disabled = start;
+    btnStop.disabled = Stop;
+    btnSetTime.disabled = setTime;
 }
 
+const showTime = (time) => {
+    if (time.hours < 0) {
+        time.hours = time.minutes = time.seconds = 0;
+    }
+    hours.value = time.hours < 10 ? `0${time.hours}` : time.hours;
+    minutes.value = time.minutes < 10 ? `0${time.minutes}` : time.minutes;
+    seconds.value = time.seconds < 10 ? `0${time.seconds}` : time.seconds;
+}
+
+const decrement = (time) => {
+    if (time.hours >= 0 && time.minutes >= 0 && time.seconds >= 0) {
+        time.seconds--;
+        if (time.seconds < 0) {
+            time.seconds = 59;
+            time.minutes--;
+        }
+        if (time.minutes < 0) {
+            time.minutes = 59;
+            time.hours--;
+        }
+    } else {
+        // Timer is over.
+        clearInterval(handle);
+        handle = 0;
+    }
+};
+
 btnStart.onclick = () => {
-    chrome.runtime.sendMessage({ cmd: 'START_TIMER' });
+    chrome.runtime.sendMessage({ cmd: 'START_TIMER' }, (response) => {
+        if (response && response.time) {
+            disableButtons(true, true, false, true);
+            showTime(response.time);
+            if (response.running) {
+                handle = setInterval(() => {
+                    decrement(response.time);
+                    showTime(response.time);
+                }, 1000);
+            }
+        }
+    });
 }
 
 btnSetTime.onclick = () => {
     console.log(btnSetTime);
     if (btnSetTime.textContent === 'SET TIME')
     {
+        disableButtons(true, false, true, true);
         btnSetTime.textContent = 'SET';
         toggleInputFieldDisabled();
     }
     else if (btnSetTime.textContent === 'SET')
     {
         btnSetTime.textContent = 'SET TIME';
+        disableButtons();
         toggleInputFieldDisabled();
         chrome.runtime.sendMessage({ cmd: 'SET_TIME', time: {
             hours: Number(hours.value),
@@ -56,9 +103,25 @@ btnSetTime.onclick = () => {
 }
 
 btnStop.onclick = () => {
-    chrome.runtime.sendMessage({ cmd: 'STOP_TIMER' });
+    chrome.runtime.sendMessage({ cmd: 'STOP_TIMER' }, (response) => {
+        if (response && response.time) {
+            disableButtons(false, true, true, false);
+            showTime(response.time);
+            clearInterval(handle);
+            handle = 0;
+        }
+    });
 }
 
 btnReset.onclick = () => {
-    chrome.runtime.sendMessage({ cmd: 'RESET_TIMER' });
+    chrome.runtime.sendMessage({ cmd: 'RESET_TIMER' }, (response) => {
+        console.log(response);
+        if (response && response.time) {
+            disableButtons();
+            showTime(response.time);
+            clearInterval(handle);
+            handle = 0;
+            console.log('Timer reset');
+        }
+    });
 }
