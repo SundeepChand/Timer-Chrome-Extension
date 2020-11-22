@@ -1,7 +1,7 @@
 {
   "name": "Timer",
-  "version": "1.0",
-  "description": "A timer to help you stay on time.",
+  "version": "0.1",
+  "description": "A minimalistic timer for the time conscious person.",
   "permissions": ["tts", "storage"],
   "background": {
     "scripts": ["background.js"],
