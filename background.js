@@ -3,7 +3,6 @@ let defaultTime = {
   minutes: 30,
   seconds: 0,
 };
-let timer = null;
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ time: defaultTime }, () => {
     timer = new Timer();
@@ -15,9 +14,6 @@ chrome.runtime.onInstalled.addListener(() => {
       };
     })
   });
-});
-chrome.storage.sync.get(['time'], (response) => {
-  defaultTime = response.time;
 });
 
 let handle = 0;
@@ -99,6 +95,7 @@ class Timer {
   };
 };
 
+let timer = new Timer();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.cmd === 'START_TIMER' && !timer.currentState.running)
   {
