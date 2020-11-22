@@ -16,6 +16,9 @@ chrome.runtime.onInstalled.addListener(() => {
     })
   });
 });
+chrome.storage.sync.get(['time'], (response) => {
+  defaultTime = response.time;
+});
 
 let handle = 0;
 class Timer {
@@ -75,9 +78,16 @@ class Timer {
         this.currentTime.minutes = 59;
         this.currentTime.hours--;
       }
+      let badgeMinutes = this.currentTime.hours * 60 + this.currentTime.minutes;
+      let badgeSeconds = this.currentTime.seconds;
+      if (badgeMinutes < 0) {
+        badgeMinutes = badgeSeconds = 0;
+      }
+      chrome.browserAction.setBadgeText({ text: `${badgeMinutes}:${badgeSeconds}`});
     } else {
       // Timer is over.
       this.reset();
+      chrome.browserAction.setBadgeText({ text: '' });
       clearInterval(handle);
       handle = 0;
       chrome.tts.speak(`Time's up!`, {
@@ -120,6 +130,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   {
     timer = new Timer();
     sendResponse({ time: timer.currentTime, running: timer.currentState.running });
+    chrome.browserAction.setBadgeText({ text: '' });
   }
   else if (request.cmd === 'GET_TIME')
   {
