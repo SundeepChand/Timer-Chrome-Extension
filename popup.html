@@ -6,9 +6,8 @@
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          border: 2px solid black;
           border-radius: 5px;
-          box-shadow: 2px 2px 10px 0px gray;
+          box-shadow: 0px 0px 10px 0px gray;
           padding: 5px;
         }
         .timer {
@@ -17,6 +16,7 @@
           justify-content: space-around;
           padding-bottom: 5px;
           border-bottom: 2px solid darkgray;
+          margin-bottom: 5px;
         }
         .time {
           width: 40px;
@@ -24,7 +24,7 @@
           font-size: 20px;
           font-weight: 600;
           text-align: center;
-          border: 2px solid rgb(168, 168, 168);
+          box-shadow: 1px 1px 2px 0px gray inset;
           border-radius: 5px;
         }
         .colon {
@@ -43,39 +43,32 @@
           padding: 5px;
           border: 1px solid gray;
           font-weight: 500;
+          box-shadow: 0px 0px 2px 0px gray;
+          border-radius: 5px;
+          border: none;
+          outline: none;
         }
         .btn-row {
           display: flex;
           justify-content: space-between;
         }
         #btn-start {
-          background-color: rgb(146, 255, 96);
-        }
-        #btn-start:enabled {
-          background-color: rgb(78, 221, 34);
+          background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
         }
         #btn-set-time {
-          background-color: rgb(109, 177, 255);
-        }
-        #btn-set-time:enabled {
-          color: white;
-          background-color: rgb(62, 135, 219);
+          background-image: linear-gradient(to right, #6ebbff 0%, #6df8ff 100%);
         }
         #btn-stop {
-          background-color: rgb(255, 216, 110);
-        }
-        #btn-stop:enabled {
-          background-color: rgb(255, 192, 20);
+          background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
         }
         #btn-reset {
-          background-color: rgb(255, 98, 98);
-        }
-        #btn-reset:enabled {
-          color: white;
-          background-color: rgb(236, 40, 40);
+          background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
         }
         .btn:hover {
           cursor: pointer;
+          transform: scale(1.02);
+          border: none;
+          outline: none;
         }
         .btn:disabled:hover {
           cursor: not-allowed;

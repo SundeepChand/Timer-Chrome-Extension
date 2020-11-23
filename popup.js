@@ -1,5 +1,6 @@
 chrome.runtime.getBackgroundPage((backgroundPage) => {
   console = backgroundPage.console;
+  backgroundPage.timer = 'Hello';
 
   const hours = document.getElementById('hours');
   const minutes = document.getElementById('minutes');

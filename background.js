@@ -5,7 +5,6 @@ let defaultTime = {
 };
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ time: defaultTime }, () => {
-    timer = new Timer();
     chrome.storage.sync.get(['time'], ({ time }) => {
       defaultTime = {
         hours: time.hours,
@@ -24,11 +23,13 @@ class Timer {
       minutes: defaultTime.minutes,
       seconds: defaultTime.seconds,
     };
-    chrome.storage.sync.get(['time'], ({ time }) => {
+    chrome.storage.sync.get(['time'], (data) => {
+      if (!data || !data.time)
+        return;
       this.currentTime = {
-        hours: time.hours,
-        minutes: time.minutes,
-        seconds: time.seconds,
+        hours: data.time.hours,
+        minutes: data.time.minutes,
+        seconds: data.time.seconds,
       };
     });
     this.currentState = {
@@ -86,7 +87,7 @@ class Timer {
       chrome.browserAction.setBadgeText({ text: '' });
       clearInterval(handle);
       handle = 0;
-      chrome.tts.speak(`Time's up!`, {
+      chrome.tts.speak(`Time's up! Time's up! Time's up!`, {
         'lang': 'en-US',
         'rate': 1.5,
         'pitch': 1.5,
